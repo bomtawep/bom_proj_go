@@ -1,0 +1,36 @@
+version: '3.3'
+services:
+  api:
+    container_name: 'api'
+    image: 'golang:latest'
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - '8080'
+    volumes:
+      - .:/app
+    restart: on-failure
+    depends_on:
+      - 'mongo'
+#  web:
+#    container_name: 'web'
+#    image: 'nginx:latest'
+#    build: ./nginx
+#    ports:
+#      - '80:80'
+#    depends_on:
+#      - 'api'
+  mongo:
+    image: 'mongo:latest'
+    container_name: 'mongo'
+    ports:
+      - '27100:27017'
+    volumes:
+      - ./data/dev/mongo:/data/db
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+        - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+        - MONGO_INITDB_DATABASE=${MONGO_DBNAME}
+        - MONGO_INITDB_DATA_PATH=/data/db
+    restart: on-failure
