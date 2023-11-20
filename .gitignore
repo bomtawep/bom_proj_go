@@ -23,3 +23,9 @@ go.work
 
 # Exclude .idea directory
 .idea/
+
+# Exclude .env
+.env
+
+# Exclude data image
+/data
