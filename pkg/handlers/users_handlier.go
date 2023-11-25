@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "List of products")
+	log.Println(w, "List of products")
 }

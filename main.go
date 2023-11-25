@@ -1,26 +1,21 @@
 package main
 
 import (
-	"bom_proj_go/cmd/users"
+	"bom_proj_go/api/routes"
 	"bom_proj_go/internal/database"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"log"
 )
 
 func main() {
-	database.InitializeDB()
-	r := gin.Default()
+	router := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Server is running",
-		})
-	})
+	database.ConnectDB()
+	routes.UserRoute(router)
 
-	http.HandleFunc("/create-user", users.CreateUser)
-
-	err := r.Run()
+	err := router.Run("localhost:8080")
 	if err != nil {
-		return
+		log.Fatal("Error running server: ", err)
 	}
+	log.Fatalln("Server running on port 8080: ", nil)
 }
