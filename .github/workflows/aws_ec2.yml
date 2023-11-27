@@ -1,0 +1,45 @@
+name: Deploy to Amazon EC2
+
+env:
+  APP_NAME: "bom-go-proj"
+  APP_PORT: "8080"
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_bom_go_proj }}
+  IMAGE_REGISTRY_USER: ${{ github.actor }}
+  IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
+  EC2_SSH_KEY: ${{ EC2_SSH_KEY }}
+  HOST_DNS: ${{ HOST_DNS }}
+  TARGET_DIR: ${{ TARGET_DIR }}
+  IMAGE_TAGS: latest
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+    
+jobs:
+  ci-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        echo "Test build"
+  ci-aws-build:
+    needs: ci-build
+    name: deploy to AWS
+    runs-on: ubuntu-20.04
+    environment: production
+    outputs:
+        ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+        SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
+    steps:
+     - name: Check for required secrets
+       uses: actions/github-script@v6
+       with:
+          script: |
+            const secrets = {
+              EC2_SSH_KEY: `${{ secrets.EC2_SSH_KEY }}`,
+              HOST_DNS: `${{ secrets.HOST_DNS }}`,
+              TARGET_DIR: `${{ secrets.TARGET_DIR }}`,
+            };
+            core.info(`Secrets: ${secrets}`)
