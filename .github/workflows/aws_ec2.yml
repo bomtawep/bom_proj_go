@@ -1,7 +1,7 @@
 name: Deploy to Amazon EC2
 
 env:
-  APP_NAME: "bom-go-proj"
+  APP_NAME: "golang"
   APP_PORT: "8080"
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   IMAGE_REGISTRY_USER: ${{ github.actor }}
