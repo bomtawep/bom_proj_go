@@ -6,9 +6,9 @@ env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_bom_go_proj }}
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
-  EC2_SSH_KEY: ${{ EC2_SSH_KEY }}
-  HOST_DNS: ${{ HOST_DNS }}
-  TARGET_DIR: ${{ TARGET_DIR }}
+  EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+  HOST_DNS: ${{ secrets.HOST_DNS }}
+  TARGET_DIR: ${{ secrets.TARGET_DIR }}
   IMAGE_TAGS: latest
 
 on:
