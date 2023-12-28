@@ -2,18 +2,20 @@ package main
 
 import (
 	"bom_proj_go/api/routes"
+	"github.com/gofiber/fiber/v2"
+
+	//"bom_proj_go/api/routes"
 	"bom_proj_go/internal/database"
-	"github.com/gin-gonic/gin"
 	"log"
 )
 
 func main() {
-	router := gin.Default()
+	app := fiber.New()
 
 	database.ConnectDB()
-	routes.UserRoute(router)
+	routes.GroupRoute(app)
 
-	err := router.Run("localhost:8080")
+	err := app.Listen(":8000")
 	if err != nil {
 		log.Fatal("Error running server: ", err)
 	}
