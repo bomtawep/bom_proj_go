@@ -9,7 +9,7 @@ import (
 )
 
 func ConnectDB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI(configs.EnvMongoURI())
+	clientOptions := options.Client().ApplyURI(configs.GetEnv("MONGO_URI"))
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
 		log.Fatal(err)

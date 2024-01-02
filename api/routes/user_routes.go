@@ -9,8 +9,8 @@ func userGroup(group fiber.Router) {
 
 	userGroup := group.Group("/users")
 	userGroup.Post("/", users.CreateUser)
-	//app.GET("/user/:userId", users.GetAUser)
-	//app.PUT("/user/:userId", users.EditAUser)
+	userGroup.Get("/:userId", users.GetUser)
+	userGroup.Put("/:userId", users.UpdateUser)
 	//app.DELETE("/user/:userId", users.DeleteAUser)
-	//app.GET("/users", users.GetAllUsers)
+	userGroup.Get("/", users.GetUsers)
 }
