@@ -61,7 +61,6 @@ func getUser(context *fiber.Ctx) (users.User, error) {
 	defer cancel()
 	objUserId, _ := primitive.ObjectIDFromHex(hexUserId)
 	result := userCollection.FindOne(ctx, bson.M{"id": objUserId})
-	log.Println(result)
 	err := result.Decode(&user)
 	if err != nil {
 		return users.User{}, err
@@ -69,15 +68,15 @@ func getUser(context *fiber.Ctx) (users.User, error) {
 	return user, nil
 }
 
-func updateUser(context *fiber.Ctx) (users.User, error) {
+func updateUser(context *fiber.Ctx) (*mongo.UpdateResult, error) {
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 	if err := context.BodyParser(&user); err != nil {
-		return user, err
+		return nil, err
 	}
 	if validationErr := validate.Struct(&user); validationErr != nil {
-		return user, validationErr
+		return nil, validationErr
 	}
 	objUserId, _ := primitive.ObjectIDFromHex(hexUserId)
 	updateData := users.User{
@@ -87,10 +86,21 @@ func updateUser(context *fiber.Ctx) (users.User, error) {
 		Firstname: user.Firstname,
 		Lastname:  user.Lastname,
 	}
-	result, err := userCollection.UpdateByID(ctx, bson.M{"id": objUserId}, bson.M{"$set": updateData})
-	log.Println(result)
+	result, err := userCollection.UpdateOne(ctx, bson.M{"id": objUserId}, bson.M{"$set": updateData})
 	if err != nil {
-		return users.User{}, err
+		return nil, err
 	}
-	return user, err
+	return result, err
+}
+
+func deleteUser(context *fiber.Ctx) (string, error) {
+	hexUserId := context.Params("userId")
+	ctx, cancel := configs.CtxWithTimout()
+	defer cancel()
+	objUserId, _ := primitive.ObjectIDFromHex(hexUserId)
+	_, err := userCollection.DeleteOne(ctx, bson.M{"id": objUserId})
+	if err != nil {
+		return hexUserId, err
+	}
+	return hexUserId, err
 }

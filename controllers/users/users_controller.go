@@ -85,3 +85,23 @@ func UpdateUser(context *fiber.Ctx) error {
 			Data:    &fiber.Map{"user": users},
 		})
 }
+
+func DeleteUser(context *fiber.Ctx) error {
+	deleteResult, err := deleteUser(context)
+	if err != nil {
+		return context.Status(
+			http.StatusBadRequest).JSON(
+			responses.UserResponse{
+				Status:  http.StatusBadRequest,
+				Message: "error",
+				Data:    &fiber.Map{"message": err.Error()},
+			})
+	}
+	return context.Status(
+		http.StatusCreated).JSON(
+		responses.UserResponse{
+			Status:  http.StatusCreated,
+			Message: "success",
+			Data:    &fiber.Map{"deleted": deleteResult},
+		})
+}
