@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"bom_proj_go/controllers/users"
+	"bom_proj_go/pkg/users"
 	"github.com/gofiber/fiber/v2"
 )
 

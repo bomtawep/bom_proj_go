@@ -12,11 +12,11 @@ import (
 	"log"
 )
 
-var userCollection *mongo.Collection = database.GetCollection(database.Database, "users")
 var validate = validator.New()
 var user users.User
 
 func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
+	var userCollection *mongo.Collection = database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 	newUser := users.User{
@@ -42,6 +42,7 @@ func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
 }
 
 func getUsers() ([]users.User, error) {
+	var userCollection *mongo.Collection = database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 	cursor, err := userCollection.Find(ctx, bson.M{})
@@ -56,6 +57,7 @@ func getUsers() ([]users.User, error) {
 }
 
 func getUser(context *fiber.Ctx) (users.User, error) {
+	var userCollection *mongo.Collection = database.GetCollection("users")
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
@@ -69,6 +71,7 @@ func getUser(context *fiber.Ctx) (users.User, error) {
 }
 
 func updateUser(context *fiber.Ctx) (*mongo.UpdateResult, error) {
+	var userCollection *mongo.Collection = database.GetCollection("users")
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
@@ -94,6 +97,7 @@ func updateUser(context *fiber.Ctx) (*mongo.UpdateResult, error) {
 }
 
 func deleteUser(context *fiber.Ctx) (string, error) {
+	var userCollection *mongo.Collection = database.GetCollection("users")
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
