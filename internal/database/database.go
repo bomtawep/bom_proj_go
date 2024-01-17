@@ -8,8 +8,8 @@ import (
 	"log"
 )
 
-func ConnectDB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI(configs.EnvMongoURI())
+func ConnectDB() {
+	clientOptions := options.Client().ApplyURI(configs.GetEnv("MONGO_URI"))
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
@@ -20,12 +20,12 @@ func ConnectDB() *mongo.Client {
 		log.Fatal(err)
 	}
 	log.Println("Connected to MongoDB")
-	return client
+	conn = client
 }
 
-var Database = ConnectDB()
+var conn *mongo.Client
 
-func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
-	collection := client.Database("bom-db").Collection(collectionName)
+func GetCollection(collectionName string) *mongo.Collection {
+	collection := conn.Database("bom-db").Collection(collectionName)
 	return collection
 }
