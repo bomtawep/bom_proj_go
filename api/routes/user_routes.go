@@ -1,16 +1,15 @@
 package routes
 
 import (
-	"bom_proj_go/controllers/users"
+	"bom_proj_go/pkg/users"
 	"github.com/gofiber/fiber/v2"
 )
 
 func userGroup(group fiber.Router) {
-
 	userGroup := group.Group("/users")
 	userGroup.Post("/", users.CreateUser)
-	//app.GET("/user/:userId", users.GetAUser)
-	//app.PUT("/user/:userId", users.EditAUser)
-	//app.DELETE("/user/:userId", users.DeleteAUser)
-	//app.GET("/users", users.GetAllUsers)
+	userGroup.Get("/:userId", users.GetUser)
+	userGroup.Put("/:userId", users.UpdateUser)
+	userGroup.Delete("/:userId", users.DeleteUser)
+	userGroup.Get("/", users.GetUsers)
 }
