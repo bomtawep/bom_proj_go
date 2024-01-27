@@ -1,7 +1,7 @@
-package middleware
+package auth
 
 import (
-	"bom_proj_go/configs"
+	"bom_proj_go/pkg/common/configs"
 	"github.com/gofiber/fiber/v2"
 
 	jwtMiddleware "github.com/gofiber/jwt/v2"
