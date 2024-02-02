@@ -1,27 +1,27 @@
 package main
 
 import (
-	"bom_proj_go/api/routes"
-	"bom_proj_go/configs"
-	"bom_proj_go/internal/database"
-	"bom_proj_go/pkg/middleware"
+	"bom_proj_go/pkg/common/configs"
+	"bom_proj_go/pkg/common/database"
+	"bom_proj_go/pkg/routes"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"log"
+	"github.com/gofiber/fiber/v2/log"
+	"strconv"
 )
 
 func main() {
-	configs.LoadEnv()
-	database.ConnectDB()
+	// Load environment variables
+	env := configs.LoadEnv()
+
+	// Connect to MongoDB
+	database.InitialDatabase()
+	defer database.DisconnectDatabase()
+
+	// Create a new Fiber app
 	app := fiber.New()
-	app.Use(cors.New())
-
 	routes.GroupRoute(app)
-	middleware.JWTProtected()
-
-	err := app.Listen(`:` + configs.GetEnv("PORT"))
+	err := app.Listen(`:` + strconv.Itoa(env.Port))
 	if err != nil {
-		log.Fatal("Error running server: ", err)
+		log.Fatal("Fiber app server error: ", err)
 	}
-	log.Println("Server running on port :" + configs.GetEnv("PORT"))
 }
