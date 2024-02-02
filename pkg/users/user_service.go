@@ -6,28 +6,23 @@ import (
 	"bom_proj_go/pkg/models"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 var validate = validator.New()
 var user models.User
 var login models.Login
-var userCollection *mongo.Collection = database.GetCollection(database.Database, "users")
 
 func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
+	// Declare all data
+	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
-	newUser := models.User{
-		Id:        primitive.NewObjectID(),
-		Username:  user.Username,
-		Password:  user.Password,
-		Firstname: user.Firstname,
-		Lastname:  user.Lastname,
-	}
 
+	// Validate user input
 	if err := context.BodyParser(&user); err != nil {
 		return nil, err
 	}
@@ -35,7 +30,11 @@ func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
 		return nil, validationErr
 	}
 
-	result, insertError := userCollection.InsertOne(ctx, newUser)
+	// Assign NewObjectID to user
+	user.Id = primitive.NewObjectID()
+
+	// Insert user to database
+	result, insertError := userCollection.InsertOne(ctx, &user)
 	if insertError != nil {
 		panic("Error inserting user")
 	}
@@ -43,6 +42,7 @@ func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
 }
 
 func getUsers() ([]models.User, error) {
+	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 	cursor, err := userCollection.Find(ctx, bson.M{})
@@ -57,6 +57,7 @@ func getUsers() ([]models.User, error) {
 }
 
 func getUser(context *fiber.Ctx) (models.User, error) {
+	userCollection := database.GetCollection("users")
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
@@ -70,6 +71,7 @@ func getUser(context *fiber.Ctx) (models.User, error) {
 }
 
 func updateUser(context *fiber.Ctx) (*mongo.UpdateResult, error) {
+	userCollection := database.GetCollection("users")
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
@@ -95,6 +97,7 @@ func updateUser(context *fiber.Ctx) (*mongo.UpdateResult, error) {
 }
 
 func deleteUser(context *fiber.Ctx) (string, error) {
+	userCollection := database.GetCollection("users")
 	hexUserId := context.Params("userId")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
@@ -107,6 +110,7 @@ func deleteUser(context *fiber.Ctx) (string, error) {
 }
 
 func getUsername(context *fiber.Ctx) (*mongo.SingleResult, error) {
+	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 	if err := context.BodyParser(&login); err != nil {

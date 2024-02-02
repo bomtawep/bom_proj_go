@@ -3,43 +3,36 @@ package database
 import (
 	"bom_proj_go/pkg/common/configs"
 	"context"
-	"fmt"
+	"github.com/gofiber/fiber/v2/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
 var conn *mongo.Client
-var cfg = configs.GetConfig()
 
-func Initial() *mongo.Client {
-	fmt.Println("Connecting to MongoDB")
-	fmt.Println("Configs: ", cfg.Port)
-	clientOptions := options.Client().ApplyURI(cfg.MongoUrl)
+func InitialDatabase() {
+	env := configs.GetConfig()
+	log.Info("Connecting to MongoDB...")
+	clientOptions := options.Client().ApplyURI(env.MongoUri)
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Database connection error: ", err)
 	}
-
 	err = client.Ping(context.Background(), nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Can't test ping database: ", err)
 	}
-	log.Println("Config: ", configs.GetConfig())
-	log.Println("Connected to MongoDB")
-	return client
+	conn = client
+	log.Info("Connected to MongoDB")
 }
-
-var Database = Initial()
-
-func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
-	collection := client.Database("bom-db").Collection(collectionName)
+func GetCollection(collectionName string) *mongo.Collection {
+	collection := conn.Database("bom-db").Collection(collectionName)
 	return collection
 }
-func Disconnect() {
+func DisconnectDatabase() {
 	err := conn.Disconnect(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Disconnected from MongoDB")
+	log.Info("Disconnected from MongoDB")
 }

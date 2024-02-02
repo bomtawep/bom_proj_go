@@ -2,21 +2,18 @@ package configs
 
 import (
 	"bom_proj_go/pkg/models"
-	"fmt"
 	"github.com/02amanag/environment"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 var configs = models.Config{}
 
-func LoadEnv() (models.Config, error) {
-	cfg := &configs
-	err := environment.Unmarshal(*cfg)
+func LoadEnv() models.Config {
+	err := environment.Unmarshal(&configs)
 	if err != nil {
-		fmt.Printf("%+v\n", err)
+		log.Fatal("Error loading environment variables: ", err)
 	}
-
-	fmt.Printf("%+v\n", *cfg) //output -> testUser
-	return configs, err
+	return configs
 }
 
 func GetConfig() models.Config {
