@@ -14,6 +14,7 @@ import (
 
 var validate = validator.New()
 var user models.User
+var UserName models.UserName
 var login models.Login
 
 func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
@@ -29,6 +30,14 @@ func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
 	if validationErr := validate.Struct(&user); validationErr != nil {
 		return nil, validationErr
 	}
+
+	// Validate if username already exists
+	resultUser := userCollection.FindOne(ctx, bson.M{"username": user.Username})
+	err := resultUser.Decode(&user)
+	if err == nil {
+		return nil, fiber.NewError(400, "Username already exists")
+	}
+	log.Debug("resultUser", user)
 
 	// Assign NewObjectID to user
 	user.Id = primitive.NewObjectID()
@@ -109,20 +118,22 @@ func deleteUser(context *fiber.Ctx) (string, error) {
 	return hexUserId, err
 }
 
-func getUsername(context *fiber.Ctx) (*mongo.SingleResult, error) {
+func getUserByUsername(context *fiber.Ctx, user models.User) (*mongo.SingleResult, error) {
 	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
-	if err := context.BodyParser(&login); err != nil {
+
+	if err := context.BodyParser(&user); err != nil {
 		return nil, err
 	}
-	if validationErr := validate.Struct(&login); validationErr != nil {
+	if validationErr := validate.Struct(&user); validationErr != nil {
 		return nil, validationErr
 	}
-	result := userCollection.FindOne(ctx, bson.M{"username": login.Username})
+	result := userCollection.FindOne(ctx, bson.M{"username": user.Username})
 	err := result.Decode(&user)
 	if err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
