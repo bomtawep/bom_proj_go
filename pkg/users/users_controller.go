@@ -106,22 +106,22 @@ func DeleteUser(context *fiber.Ctx) error {
 		})
 }
 
-func GetUsername(context *fiber.Ctx) error {
-	password, err := getUsername(context)
-	if err != nil {
-		return context.Status(
-			http.StatusBadRequest).JSON(
-			models.UserResponse{
-				Status:  http.StatusBadRequest,
-				Message: "error",
-				Data:    &fiber.Map{"message": err.Error()},
-			})
-	}
-	return context.Status(
-		http.StatusCreated).JSON(
-		models.UserResponse{
-			Status:  http.StatusCreated,
-			Message: "success",
-			Data:    &fiber.Map{"": password},
-		})
-}
+//func GetUsername(context *fiber.Ctx) error {
+//	password, err := getUsername(context)
+//	if err != nil {
+//		return context.Status(
+//			http.StatusBadRequest).JSON(
+//			models.UserResponse{
+//				Status:  http.StatusBadRequest,
+//				Message: "error",
+//				Data:    &fiber.Map{"message": err.Error()},
+//			})
+//	}
+//	return context.Status(
+//		http.StatusCreated).JSON(
+//		models.UserResponse{
+//			Status:  http.StatusCreated,
+//			Message: "success",
+//			Data:    &fiber.Map{"": password},
+//		})
+//}

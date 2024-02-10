@@ -11,3 +11,6 @@ type User struct {
 	Firstname string             `json:"firstname,omitempty" validate:"required"`
 	Lastname  string             `json:"lastname,omitempty" validate:"required"`
 }
+type UserName struct {
+	Username string `json:"username,omitempty" validate:"required"`
+}
