@@ -2,6 +2,8 @@ name: AWS_EC2 CI/CD
 
 env:
   APP_NAME: ${{ secrets.APP_NAME }}
+  IMAGE_REGISTRY_USER: ${{ github.actor }}
+  IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
 
 on:
   push:
@@ -26,8 +28,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ env.IMAGE_REGISTRY_USER }}
+          password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
