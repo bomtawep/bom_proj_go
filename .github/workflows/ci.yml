@@ -25,13 +25,22 @@ jobs:
           docker tag mongo-db bomtawep/mongo-db:latest
           docker push bomtawep/mongo-db:latest
 
-      - name: SSH into EC2 instance and pull Docker image
-        uses: appleboy/ssh-action@master
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          host: ${{ secrets.AWS_EC2_HOST }}
-          username: ${{ secrets.AWS_EC2_USERNAME }}
-          key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
-          script: |
-            docker login -u bomtawep -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull bomtawep/mongo-db:latest
-            docker run -d -p 80:80 bomtawep/mongo-db:latest
+          ssh-private-key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
+
+      - name: SSH into EC2 and pull Docker image
+        run: |
+          ssh -i "bom.pem" ec2-user@ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com 'docker pull bomtawep/mongo-db:latest'
+
+#      - name: SSH into EC2 instance and pull Docker image
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.AWS_EC2_HOST }}
+#          username: ${{ secrets.AWS_EC2_USERNAME }}
+#          key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
+#          script: |
+#            docker login -u bomtawep -p ${{ secrets.DOCKER_PASSWORD }}
+#            docker pull bomtawep/mongo-db:latest
+#            docker run -d -p 80:80 bomtawep/mongo-db:latest
