@@ -19,8 +19,9 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       
     - name: Build the Docker image
+      id: build-image
       run: docker build -t mongo-db .
     - name: Check the Docker image
       run: docker images
     - name: Push to Dockerhub
-      run: docker push mongo-db:latest
+      run: docker tag mongo-db $DOCKER_USERNAME/mongo-db
