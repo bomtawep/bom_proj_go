@@ -1,20 +1,20 @@
 version: '3.3'
 services:
-#  api:
-#    container_name: 'api'
-#    image: 'golang:latest'
-#    build:
-#      dockerfile: Dockerfile
-#      context: .
-#    ports:
-#      - '8080'
-#    volumes:
-#      - .:/app
-#    restart: on-failure
-#    depends_on:
-#      - 'mongo'
+  api:
+    container_name: 'api'
+    image: 'golang:latest'
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - '8080:8080'
+    volumes:
+      - .:/app
+    restart: on-failure
+    depends_on:
+      - 'mongo'
 #  web:
-#    container_name: 'web'
+#    container_name: 'nginx'
 #    image: 'nginx:latest'
 #    build: ./nginx
 #    ports:
