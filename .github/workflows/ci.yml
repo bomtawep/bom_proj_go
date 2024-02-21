@@ -23,4 +23,4 @@ jobs:
     - name: Check the Docker image
       run: docker images
     - name: Push to Dockerhub
-      run: docker push bomtawep/mongo-db:latest
+      run: docker push mongo-db:latest
