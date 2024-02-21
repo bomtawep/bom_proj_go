@@ -31,8 +31,3 @@ jobs:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
-          script: |
-            docker pull bomtawep/mongo-db:latest
-            docker stop mongo-db
-            docker rm mongo-db
-            docker run -d -p 27100:27017 --name mongo-db bomtawep/mongo-db:latest
