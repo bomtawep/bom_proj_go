@@ -20,5 +20,7 @@ jobs:
       
     - name: Build the Docker image
       run: docker build -t mongo-db .
+    - name: Check the Docker image
+      run: docker images
     - name: Push to Dockerhub
       run: docker push bomtawep/mongo-db:latest

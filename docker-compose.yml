@@ -22,8 +22,8 @@ services:
 #    depends_on:
 #      - 'api'
   mongo:
-    image: 'mongo-db:latest'
-    container_name: 'mongo'
+    image: 'mongo:latest'
+    container_name: 'mongo-db'
     ports:
       - '27100:27017'
     volumes:
