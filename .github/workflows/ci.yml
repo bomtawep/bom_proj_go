@@ -41,8 +41,4 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
-            docker-compose -f docker-compose.yml up -d
-            docker pull bomtawep/nginx:latest
-            docker stop nginx
-            docker rm nginx
-            docker run -d -p 80:80 --name nginx bomtawep/nginx:latest
+            docker-compose up -d
