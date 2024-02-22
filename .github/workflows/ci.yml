@@ -38,4 +38,4 @@ jobs:
               docker pull bomtawep/mongo-db:latest
               docker stop bom_proj_go
               docker rm bom_proj_go
-              docker run -d -p 27100:27017 --name bom_proj_go bomtawep/bom_proj_go:latest
+              docker run -d -p 8080:8080 --name bom_proj_go bomtawep/bom_proj_go:latest
