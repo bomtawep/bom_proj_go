@@ -25,6 +25,12 @@ jobs:
           docker tag bom-go-api bomtawep/bom-go-api:latest
           docker push bomtawep/bom-go-api:latest
 
+      - name: Build Nginx and push Docker image
+        run: |
+          docker build -t nginx .
+          docker tag nginx bomtawep/nginx:latest
+          docker push bomtawep/nginx:latest
+
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
 
@@ -36,3 +42,7 @@ jobs:
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
             docker-compose -f docker-compose.yml up -d
+            docker pull bomtawep/nginx:latest
+            docker stop nginx
+            docker rm nginx
+            docker run -d -p 80:80 --name nginx bomtawep/nginx:latest
