@@ -21,9 +21,9 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t bom-api .
-          docker tag bom-api bomtawep/bom-api:latest
-          docker push bomtawep/bom-api:latest
+          docker build -t bom-go-api .
+          docker tag bom-go-api bomtawep/bom-go-api:latest
+          docker push bomtawep/bom-go-api:latest
 
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
-              docker pull bomtawep/bom-api:latest
-              docker stop bom-api
-              docker rm bom-api
-              docker run -d -p 8080:8080 --name bom-api bomtawep/bom-api:latest
+              docker pull bomtawep/bom-go-api:latest
+              docker stop bom-go-api
+              docker rm bom-go-api
+              docker run -d -p 8080:8080 --name bom-go-api bomtawep/bom-go-api:latest

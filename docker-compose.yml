@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   api:
-    container_name: 'api'
+    container_name: 'bom-go-api'
     image: 'golang:latest'
     build:
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
 #      - 'api'
   mongo:
     image: 'mongo:latest'
-    container_name: 'mongo-db'
+    container_name: 'bom-mongo-db'
     ports:
       - '27100:27017'
     volumes:
