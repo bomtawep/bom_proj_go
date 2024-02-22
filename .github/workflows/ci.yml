@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Nginx and push Docker image
         run: |
-          docker build -t nginx .
+          docker build -t nginx ./nginx
           docker tag nginx bomtawep/nginx:latest
           docker push bomtawep/nginx:latest
 
