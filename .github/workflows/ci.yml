@@ -34,7 +34,7 @@ jobs:
         with:
           host: ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com
           username: ec2-user
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
             docker pull bomtawep/mongo-db:latest
             docker run -d -p 27100:27017 --name mongo-db bomtawep/mongo-db:latest
