@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t mongo-db .
+          docker build -t bom_proj_go .
           docker tag bom_proj_go bomtawep/bom_proj_go:latest
           docker push bomtawep/bom_proj_go:latest
 
