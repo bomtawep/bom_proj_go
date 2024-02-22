@@ -25,12 +25,6 @@ jobs:
           docker tag bom-go-api bomtawep/bom-go-api:latest
           docker push bomtawep/bom-go-api:latest
 
-      - name: Build Database and push Docker image
-        run: |
-          docker build -t bom-mongo-db ./database
-          docker tag bom-mongo-db bomtawep/bom-mongo-db:latest
-          docker push bomtawep/bom-mongo-db:latest
-
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
 
@@ -41,11 +35,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
-            docker pull bomtawep/bom-mongo-db:latest
             docker pull bomtawep/bom-go-api:latest
-            docker stop bom-mongo-db
             docker stop bom-go-api
-            docker rm bom-mongo-db
             docker rm bom-go-api
-            docker run -d -p 27100:27017 --name bom-mongo-db bomtawep/bom-mongo-db:latest
             docker run -d -p 8080:8080 --name bom-go-api bomtawep/bom-go-api:latest
