@@ -28,13 +28,7 @@ jobs:
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        run: sudo ssh -i "bom.pem" ec2-user@ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com
-        with:
-          host: ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com
-          username: ec2-user
-          key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
-          script: |
-            docker pull bomtawep/mongo-db:latest
-            docker run -d -p 27100:27017 --name mongo-db bomtawep/mongo-db:latest
+      # ssh to ec2 and pull docker image
+      - name: SSH to EC2
+        run: |
+          ssh -i "bom.pem" ec2-user@ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com
