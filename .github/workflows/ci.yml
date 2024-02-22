@@ -31,4 +31,4 @@ jobs:
       # ssh to ec2 and pull docker image
       - name: SSH to EC2
         run: |
-          ssh -i "bom.pem" ec2-user@ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com
+          ssh -i ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }} ec2-user@${{ secrets.AWS_EC2_HOST }} "docker pull bomtawep/mongo-db:latest"
