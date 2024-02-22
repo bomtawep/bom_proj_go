@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Database and push Docker image
         run: |
-          docker build -t bom-mongo-db .
+          docker build -t bom-mongo-db ./database
           docker tag bom-mongo-db bomtawep/bom-mongo-db:latest
           docker push bomtawep/bom-mongo-db:latest
 
