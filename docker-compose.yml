@@ -2,7 +2,7 @@ version: '3.3'
 services:
   api:
     container_name: 'bom-go-api'
-    image: 'golang:latest'
+    image: 'bomtawep/bom-mongo-db:latest'
     build:
       dockerfile: Dockerfile
       context: .
