@@ -26,7 +26,7 @@ services:
       - 'api'
   mongo:
     container_name: 'bom-mongo-db'
-    image: 'bomtawep/mongo:latest'
+    image: 'bomtawep/bom-mongo-db:latest'
     volumes:
       - ./data/dev/mongo:/data/db
     ports:
