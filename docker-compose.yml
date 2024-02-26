@@ -2,10 +2,7 @@ version: '3.3'
 services:
   api:
     container_name: 'bom-go-api'
-    image: 'bomtawep/bom-mongo-db:latest'
-    build:
-      dockerfile: Dockerfile
-      context: .
+    image: 'bomtawep/bom-go-api:latest'
     volumes:
       - .:/app
     ports:
@@ -16,7 +13,6 @@ services:
   web:
     container_name: 'bom-nginx'
     image: 'bomtawep/bom-nginx:latest'
-    build: ./nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
@@ -26,7 +22,7 @@ services:
       - 'api'
   mongo:
     container_name: 'bom-mongo-db'
-    image: 'bomtawep/bom-mongo-db:latest'
+    image: 'mongo:latest'
     volumes:
       - ./data/dev/mongo:/data/db
     ports:
