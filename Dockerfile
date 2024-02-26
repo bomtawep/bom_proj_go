@@ -1,5 +1,4 @@
 FROM golang:latest as build
-
 WORKDIR /go/src/app/
 COPY . .
 COPY .env.production .env
