@@ -41,4 +41,5 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
+            sudo scp -i "bom.pem" docker-compose.yml ec2-user@ec2-54-255-227-26.ap-southeast-1.compute.amazonaws.com:~/.
             docker-compose up -d
