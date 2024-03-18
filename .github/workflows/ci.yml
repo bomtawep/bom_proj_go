@@ -42,5 +42,5 @@ jobs:
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
             sudo scp -i bom.pem ./nginx/nginx.conf ${{ secrets.AWS_EC2_HOST }}:/etc/nginx/conf.d/default.conf
-            sudo scp -i bom.pem ./docker-compose.production.yml ${{ secrets.AWS_EC2_HOST }}:~
+            sudo scp -i bom.pem ./docker-compose.production.yml ${{ secrets.AWS_EC2_HOST }}:~/docker-compose.yml
             docker-compose up -d
