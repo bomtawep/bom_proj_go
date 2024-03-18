@@ -34,16 +34,12 @@ jobs:
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
 
-      - uses: actions/checkout@v4
-      - name: copy file via ssh password
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.AWS_EC2_HOST }}
-          username: ${{ secrets.AWS_EC2_USERNAME }}
-          password: ${{ secrets.AWS_EC2_PASSWORD }}
-          port: ${{ secrets.AWS_EC2_PORT }}
-          source: ./nginx/nginx.conf
-          target: ~/etc/nginx/conf.d/default.conf
+      - name: Copy Files via SCP
+        run: |
+          scp -i bom.pem -r ./nginx/nginx.conf ec2-user@ec2-13-228-28-180.ap-southeast-1.compute.amazonaws.com:~/etc/nginx/conf.d/default.conf
+          scp -i bom.pem -r ./docker-compose.production.yml ec2-user@ec2-13-228-28-180.ap-southeast-1.compute.amazonaws.com:~/docker-compose.yml
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
