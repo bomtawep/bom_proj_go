@@ -34,24 +34,6 @@ jobs:
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
 
-      - name: Copy nginx.conf to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.AWS_EC2_HOST }}
-          username: ${{ secrets.AWS_EC2_USERNAME }}
-          key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
-          source: "./nginx/nginx.conf"
-          target: "/etc/nginx/conf.d/default.conf"
-
-      - name: Copy docker-compose.production.yml to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.AWS_EC2_HOST }}
-          username: ${{ secrets.AWS_EC2_USERNAME }}
-          key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
-          source: "docker-compose.production.yml"
-          target: "~/"
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -59,4 +41,6 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
+            sudo scp -i bom.pem ./nginx/nginx.conf ${{ secrets.AWS_EC2_HOST }}:/etc/nginx/conf.d/default.conf
+            sudo scp -i bom.pem ./docker-compose.production.yml ${{ secrets.AWS_EC2_HOST }}:~
             docker-compose up -d
