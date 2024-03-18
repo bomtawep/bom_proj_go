@@ -34,6 +34,9 @@ jobs:
       - name: Copy essential docker files
         run: |
           pwd
+          ls
+          ls ../
+          ls ../
           sudo scp -i "bom.pem" /nginx/nginx.conf ${{ secrets.AWS_EC2_HOST }}:~/etc/nginx/conf.d/default.conf
           sudo scp -i "bom.pem" /docker-compose.production.yml ${{ secrets.AWS_EC2_HOST }}:~/
 
