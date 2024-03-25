@@ -34,13 +34,11 @@ jobs:
       - name: Install SSH
         run: sudo apt-get install -y openssh-client
 
-      - name: Copy nginx.conf to EC2
+      - name: Copy nginx.conf and docker-compose.production.yml to EC2
         run: |
-          scp -i "bom.pem" ./nginx/nginx.conf ec2-user@ec2-13-228-28-180.ap-southeast-1.compute.amazonaws.com:/home/ec2-user/
-
-      - name: Copy docker-compose.production.yml to EC2
-        run: |
-          sudo scp -i bom.pem ./docker-compose.production.yml ec2-user@ec2-13-228-28-180.ap-southeast-1.compute.amazonaws.com:/home/ec2-user/docker-compose.yml
+          ls -la
+          scp -i bom.pem ./nginx/nginx.conf ec2-user@ec2-13-228-28-180.ap-southeast-1.compute.amazonaws.com:/home/ec2-user/
+          scp -i bom.pem ./docker-compose.production.yml ec2-user@ec2-13-228-28-180.ap-southeast-1.compute.amazonaws.com:/home/ec2-user/docker-compose.yml
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
