@@ -48,5 +48,4 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
           script: |
-#            sudo cp nginx.conf /etc/nginx/conf.d/default.conf
             docker-compose up -d
