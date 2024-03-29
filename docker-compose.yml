@@ -1,18 +1,22 @@
-version: '3.3'
+version: '3.7'
+networks:
+  ingress:
+    driver: bridge
 services:
   api:
     container_name: 'bom-go-api'
     build:
         context: .
         dockerfile: ./Dockerfile
-    image: 'bomtawep/bom-go-api:latest'
     volumes:
       - .:/app
     ports:
-      - '8080:8000'
+      - '8080:8080'
     restart: on-failure
     depends_on:
       - 'mongo'
+    networks:
+      - ingress
   mongo:
     container_name: 'bom-mongo-db'
     image: 'mongo:latest'
@@ -26,3 +30,5 @@ services:
         - MONGO_INITDB_DATABASE=${MONGO_DBNAME}
         - MONGO_INITDB_DATA_PATH=/data/db
     restart: on-failure
+    networks:
+      - ingress
