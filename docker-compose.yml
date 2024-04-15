@@ -1,19 +1,24 @@
 version: '3.3'
+networks:
+  ingress:
+    driver: bridge
 services:
-  api:
-    container_name: 'bom-go-api'
-    build:
-        context: .
-        dockerfile: ./Dockerfile
-    image: 'bomtawep/bom-go-api:latest'
-    volumes:
-      - .:/app
-    ports:
-      - '8080:8000'
-    restart: on-failure
-    depends_on:
-      - 'mongo'
-  mongo:
+#  api:
+#    container_name: 'bom-go-api'
+#    build:
+#        context: .
+#        dockerfile: ./Dockerfile
+#    image: 'bomtawep/bom-go-api:latest'
+#    volumes:
+#      - .:/app
+#    ports:
+#      - '8080:8080'
+#    restart: on-failure
+#    depends_on:
+#      - 'mongo-db'
+#    networks:
+#      - ingress
+  mongo-db:
     container_name: 'bom-mongo-db'
     image: 'mongo:latest'
     volumes:
@@ -26,3 +31,22 @@ services:
         - MONGO_INITDB_DATABASE=${MONGO_DBNAME}
         - MONGO_INITDB_DATA_PATH=/data/db
     restart: on-failure
+    networks:
+      - ingress
+  mysql-db:
+    platform: linux/amd64
+    image: mysql:5.7.32
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: ${MONGO_DBNAME}
+      MYSQL_USER: ${MONGO_USERNAME}
+      MYSQL_PASSWORD: ${MONGO_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - .storage/mysql_data:/var/lib/mysql
+    networks:
+      - ingress
