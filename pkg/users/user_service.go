@@ -4,6 +4,8 @@ import (
 	"bom_proj_go/pkg/common/configs"
 	"bom_proj_go/pkg/common/database"
 	"bom_proj_go/pkg/models"
+	"bom_proj_go/pkg/utilities"
+	"errors"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
@@ -14,35 +16,25 @@ import (
 
 var validate = validator.New()
 var user models.User
-var UserName models.UserName
-var login models.Login
+var email models.Email
 
 func insertUsers(context *fiber.Ctx) (*mongo.InsertOneResult, error) {
-	// Declare all data
 	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
+	user.Id = primitive.NewObjectID()
 
-	// Validate user input
 	if err := context.BodyParser(&user); err != nil {
 		return nil, err
 	}
 	if validationErr := validate.Struct(&user); validationErr != nil {
 		return nil, validationErr
 	}
-
-	// Validate if username already exists
-	resultUser := userCollection.FindOne(ctx, bson.M{"username": user.Username})
-	err := resultUser.Decode(&user)
-	if err == nil {
-		return nil, fiber.NewError(400, "Username already exists")
+	hash, err := utilities.HashPassword(user.Password)
+	if err != nil {
+		return nil, err
 	}
-	log.Debug("resultUser", user)
-
-	// Assign NewObjectID to user
-	user.Id = primitive.NewObjectID()
-
-	// Insert user to database
+	user.Password = hash
 	result, insertError := userCollection.InsertOne(ctx, &user)
 	if insertError != nil {
 		panic("Error inserting user")
@@ -93,10 +85,13 @@ func updateUser(context *fiber.Ctx) (*mongo.UpdateResult, error) {
 	objUserId, _ := primitive.ObjectIDFromHex(hexUserId)
 	updateData := models.User{
 		Id:        objUserId,
-		Username:  user.Username,
+		Email:     user.Email,
 		Password:  user.Password,
 		Firstname: user.Firstname,
 		Lastname:  user.Lastname,
+		Gender:    user.Gender,
+		Phone:     user.Phone,
+		Birthdate: user.Birthdate,
 	}
 	result, err := userCollection.UpdateOne(ctx, bson.M{"id": objUserId}, bson.M{"$set": updateData})
 	if err != nil {
@@ -118,22 +113,35 @@ func deleteUser(context *fiber.Ctx) (string, error) {
 	return hexUserId, err
 }
 
-func getUserByUsername(context *fiber.Ctx, user models.User) (*mongo.SingleResult, error) {
+func getUserByEmail(context *fiber.Ctx) (models.User, error) {
 	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 
-	if err := context.BodyParser(&user); err != nil {
-		return nil, err
+	if err := context.BodyParser(&email); err != nil {
+		return models.User{}, err
 	}
-	if validationErr := validate.Struct(&user); validationErr != nil {
-		return nil, validationErr
+	if validationErr := validate.Struct(&email); validationErr != nil {
+		return models.User{}, validationErr
 	}
-	result := userCollection.FindOne(ctx, bson.M{"username": user.Username})
+	result := userCollection.FindOne(ctx, bson.M{"email": email.Email})
+	err := result.Decode(&user)
+	if !errors.Is(err, mongo.ErrNoDocuments) {
+		return models.User{}, errors.New("User not found ")
+	}
+	return models.User{}, nil
+}
+
+func GetUserPassword(userName string) models.User {
+	userCollection := database.GetCollection("users")
+	ctx, cancel := configs.CtxWithTimout()
+	defer cancel()
+
+	result := userCollection.FindOne(ctx, bson.M{"email": userName})
 	err := result.Decode(&user)
 	if err != nil {
-		return nil, err
+		return user
 	}
 
-	return result, nil
+	return user
 }
