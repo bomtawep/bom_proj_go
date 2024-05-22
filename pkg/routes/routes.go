@@ -6,6 +6,6 @@ import (
 
 func GroupRoute(app *fiber.App) {
 	group := app.Group("/api")
-	userGroup(group)
 	authGroup(group)
+	userGroup(group)
 }

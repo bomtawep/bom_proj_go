@@ -7,5 +7,7 @@ import (
 
 func authGroup(group fiber.Router) {
 	authGroup := group.Group("/auth")
-	authGroup.Post("/login", auth.Login)
+	authGroup.Post("/login", auth.Auth)
+	authGroup.Get("/session", auth.GetSession)
+	authGroup.Post("/logout", auth.Logout)
 }
