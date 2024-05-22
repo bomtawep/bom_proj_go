@@ -1,6 +1,12 @@
 package models
 
-type Login struct {
-	Username string `json:"username,omitempty" validate:"required"`
-	Password string `json:"password,omitempty" validate:"required"`
-}
+type (
+	Login struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	Token struct {
+		AccessToken  string `json:"access_token"`
+		RefreshToken string `json:"refresh_token"`
+	}
+)

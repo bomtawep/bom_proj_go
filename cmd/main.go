@@ -20,11 +20,12 @@ func main() {
 
 	// Create a new Fiber app
 	app := fiber.New()
+
+	app.Static("/uploads", "./uploads")
+
 	app.Use(cors.New(cors.Config{
-		AllowHeaders:     "*",
-		AllowOrigins:     "*",
-		AllowCredentials: true,
-		AllowMethods:     "*",
+		AllowOrigins: "*",
+		AllowHeaders: "*",
 	}))
 	routes.GroupRoute(app)
 	err := app.Listen(`:` + strconv.Itoa(env.Port))
