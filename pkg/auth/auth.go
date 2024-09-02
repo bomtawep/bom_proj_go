@@ -40,7 +40,7 @@ func Login(context *fiber.Ctx) error {
 				Data:    &fiber.Map{"message": validationErr.Error()},
 			})
 	}
-	user := users.GetUserPassword(login.Username)
+	user := users.GetUserByUsername(login.Username)
 	if login.Username != user.Email || !utilities.CheckPasswordHash(login.Password, user.Password) {
 		return context.Status(
 			http.StatusUnauthorized).JSON(
@@ -74,12 +74,14 @@ func GetSession(context *fiber.Ctx) error {
 	claims := userContext.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
 
+	user := users.GetUserByUserId(userId)
+
 	return context.Status(
 		http.StatusOK).JSON(
 		models.UserResponse{
 			Status:  http.StatusOK,
 			Message: http.StatusText(http.StatusOK),
-			Data:    &fiber.Map{"user_id": userId},
+			Data:    &fiber.Map{"user": user},
 		})
 }
 

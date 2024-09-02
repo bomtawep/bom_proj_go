@@ -132,12 +132,26 @@ func getUserByEmail(context *fiber.Ctx) (models.User, error) {
 	return models.User{}, nil
 }
 
-func GetUserPassword(userName string) models.User {
+func GetUserByUsername(userName string) models.User {
 	userCollection := database.GetCollection("users")
 	ctx, cancel := configs.CtxWithTimout()
 	defer cancel()
 
 	result := userCollection.FindOne(ctx, bson.M{"email": userName})
+	err := result.Decode(&user)
+	if err != nil {
+		return user
+	}
+
+	return user
+}
+
+func GetUserByUserId(userId string) models.User {
+	userCollection := database.GetCollection("users")
+	ctx, cancel := configs.CtxWithTimout()
+	defer cancel()
+	objUserId, _ := primitive.ObjectIDFromHex(userId)
+	result := userCollection.FindOne(ctx, bson.M{"id": objUserId})
 	err := result.Decode(&user)
 	if err != nil {
 		return user
